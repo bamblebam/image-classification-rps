@@ -1,14 +1,68 @@
-#%%
-import matplotlib as plt
+# %%
+import matplotlib.pyplot as plt
 import tensorflow as tf
 from tensorflow import keras
-import tensorflow_datasets as tfds
+import numpy as np
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.layers import Dense, Input, Dropout, Flatten, Conv2D, BatchNormalization, Activation, MaxPooling2D
+from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.optimizers import Adam
 # %%
-tfds.list_builders()
-#%%
-builder=tfds.builder('rock_paper_scissors')
-builder.info
+train_gen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
+gen_train = train_gen.flow_from_directory(
+    "datasets/rps", class_mode='categorical', batch_size=64)
 # %%
-train=tfds.load(name='rock_paper_scissors', split='train')
-test=tfds.load(name='rock_paper_scissors', split='test')
+test_gen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
+gen_test = test_gen.flow_from_directory(
+    "datasets/rps-test-set", class_mode='categorical', batch_size=64)
+
+# %%
+model = Sequential()
+
+model.add(Conv2D(512, (3, 3), input_shape=(300, 300, 1)))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(256, (3, 3)))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(128, (3, 3)))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3)))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(64, (3, 3)))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+
+model.add(Flatten())
+
+model.add(Dense(512))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(Dropout(0.25))
+
+model.add(Dense(3, activation='softmax'))
+
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# %%
+model.summary()
+# %%
+history = model.fit(x=gen_train, epochs=10, validation_data=gen_test)
 # %%
