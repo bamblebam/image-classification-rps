@@ -19,31 +19,31 @@ gen_test = test_gen.flow_from_directory(
 # %%
 model = Sequential()
 
-# model.add(Conv2D(256, (3, 3), input_shape=(300, 300, 1)))
+# model.add(Conv2D(512, (2, 2)))
 # model.add(BatchNormalization())
 # model.add(Activation('relu'))
 # model.add(MaxPooling2D(pool_size=(2, 2)))
 # model.add(Dropout(0.25))
 
-# model.add(Conv2D(256, (3, 3)))
+# model.add(Conv2D(256, (2, 2)))
 # model.add(BatchNormalization())
 # model.add(Activation('relu'))
 # model.add(MaxPooling2D(pool_size=(2, 2)))
 # model.add(Dropout(0.25))
 
-model.add(Conv2D(128, (3, 3)))
+model.add(Conv2D(128, (2, 2), input_shape=(64, 64, 1)))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, (3, 3)))
+model.add(Conv2D(64, (2, 2)))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.25))
 
-model.add(Conv2D(64, (3, 3)))
+model.add(Conv2D(64, (2, 2)))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -66,5 +66,5 @@ model.summary()
 # %%
 model.fit(x=gen_train, epochs=10, validation_data=gen_test)
 # %%
-model.save('models/model1.h5')
+model.save('models/model2.h5')
 # %%
