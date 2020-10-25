@@ -10,26 +10,26 @@ from tensorflow.keras.optimizers import Adam
 # %%
 train_gen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
 gen_train = train_gen.flow_from_directory(
-    "datasets/rps", class_mode='categorical', batch_size=64)
+    "datasets/rps", class_mode='sparse', batch_size=64, color_mode='grayscale', target_size=(64, 64))
 # %%
 test_gen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
 gen_test = test_gen.flow_from_directory(
-    "datasets/rps-test-set", class_mode='categorical', batch_size=64)
+    "datasets/rps-test-set", class_mode='sparse', batch_size=64, color_mode='grayscale', target_size=(64, 64))
 
 # %%
 model = Sequential()
 
-model.add(Conv2D(512, (3, 3), input_shape=(300, 300, 1)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+# model.add(Conv2D(256, (3, 3), input_shape=(300, 300, 1)))
+# model.add(BatchNormalization())
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+# model.add(Dropout(0.25))
 
-model.add(Conv2D(256, (3, 3)))
-model.add(BatchNormalization())
-model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.25))
+# model.add(Conv2D(256, (3, 3)))
+# model.add(BatchNormalization())
+# model.add(Activation('relu'))
+# model.add(MaxPooling2D(pool_size=(2, 2)))
+# model.add(Dropout(0.25))
 
 model.add(Conv2D(128, (3, 3)))
 model.add(BatchNormalization())
@@ -64,5 +64,7 @@ model.compile(optimizer='adam',
 # %%
 model.summary()
 # %%
-history = model.fit(x=gen_train, epochs=10, validation_data=gen_test)
+model.fit(x=gen_train, epochs=10, validation_data=gen_test)
+# %%
+model.save('models/model1.h5')
 # %%
