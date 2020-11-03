@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import Dense, Input, Dropout, Flatten, Conv2D, BatchNormalization, Activation, MaxPooling2D
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
 # %%
 train_gen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
 gen_train = train_gen.flow_from_directory(
@@ -64,7 +64,13 @@ model.compile(optimizer='adam',
 # %%
 model.summary()
 # %%
-model.fit(x=gen_train, epochs=10, validation_data=gen_test)
+reduceLR = ReduceLROnPlateau(
+    monitor='val_loss', factor=0.1, patience=2, verbose=0, mode='auto',
+    min_delta=0.0001, cooldown=0, min_lr=0)
+callbacks = [reduceLR]
 # %%
-model.save('models/model2.h5')
+model.fit(x=gen_train, epochs=10,
+          validation_data=gen_test, callbacks=callbacks)
+# %%
+model.save('models/model3.h5')
 # %%
