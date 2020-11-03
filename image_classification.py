@@ -75,8 +75,8 @@ callbacks = [reduceLR, earlyStop]
 model.fit(x=gen_train, epochs=10,
           validation_data=gen_test, callbacks=callbacks)
 # %%
-
-print(model.metrics[0])
+score = model.evaluate(gen_test)
+print(score[1])
 # %%
-model.save('models/model3.h5')
+model.save('models/model4.h5')
 # %%
