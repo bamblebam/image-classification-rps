@@ -6,7 +6,7 @@ import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import Dense, Input, Dropout, Flatten, Conv2D, BatchNormalization, Activation, MaxPooling2D
 from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from tensorflow.keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 # %%
 train_gen = ImageDataGenerator(horizontal_flip=True, vertical_flip=True)
 gen_train = train_gen.flow_from_directory(
@@ -19,19 +19,14 @@ gen_test = test_gen.flow_from_directory(
 # %%
 model = Sequential()
 
-# model.add(Conv2D(512, (2, 2)))
-# model.add(BatchNormalization())
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.25))
-
-# model.add(Conv2D(256, (2, 2)))
-# model.add(BatchNormalization())
-# model.add(Activation('relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.25))
-
 model.add(Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'))
+model.add(Conv2D(128, (3, 3), padding='same'))
+model.add(BatchNormalization())
+model.add(Activation('relu'))
+model.add(MaxPooling2D(pool_size=(3, 3)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(128, (3, 3), padding='same'))
 model.add(Conv2D(128, (3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
@@ -49,13 +44,12 @@ model.add(Conv2D(64, (3, 3), padding='same'))
 model.add(Conv2D(64, (3, 3), padding='same'))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(3, 3)))
+model.add(MaxPooling2D(pool_size=(3, 3), padding='same'))
 model.add(Dropout(0.25))
 
 model.add(Flatten())
 
 model.add(Dense(512))
-model.add(Dense(256))
 model.add(BatchNormalization())
 model.add(Activation('relu'))
 model.add(Dropout(0.5))
@@ -72,15 +66,17 @@ reduceLR = ReduceLROnPlateau(
     monitor='val_loss', factor=0.1, patience=2, verbose=0, mode='auto',
     min_delta=0.0001, cooldown=0, min_lr=0)
 earlyStop = tf.keras.callbacks.EarlyStopping(
-    monitor='accuracy', min_delta=0.001, patience=9, verbose=0, mode='auto',
+    monitor='accuracy', min_delta=0.001, patience=10, verbose=0, mode='auto',
     baseline=None, restore_best_weights=True)
-callbacks = [reduceLR, earlyStop]
+checkpoint = ModelCheckpoint(
+    'models/model7.h5', save_best_only=True, monitor='val_loss', mode='min')
+callbacks = [reduceLR, earlyStop, checkpoint]
 # %%
-model.fit(x=gen_train, epochs=10,
+model.fit(x=gen_train, epochs=100,
           validation_data=gen_test, callbacks=callbacks)
 # %%
 score = model.evaluate(gen_test)
 print(score[1])
 # %%
-model.save('models/model5.h5')
+model.save('models/final_model.h5')
 # %%
