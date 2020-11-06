@@ -1,11 +1,21 @@
 # Image Classification rps
 
 ## Image Classification on the rock paper scissors dataset of tensorflow
+My first try at image classification using tensorflow and keras.  
+Learned a lot about by convolution neural networks and model optimization.  
 
-model 1 accuracy = 96% 77% model with more layers  
-model 2 accuracy = 99.8% 84% model with less layers
-model 3 accuracy = 99.8% 81.1% model with reducedLR
-model 4 accuracy = 100% 82.2% model with earlystop
-model 5 accuracy = 98% 93.01% changed padding to (3,3) from (2,2)
-model 7 accuracy = 98% 93.28% added more convolution and increased number of epochs
+### My model accuracy:-
+
+| Model | Training Accuracy | Validation Accuracy | Additional Comments                                   |
+|-------|-------------------|---------------------|-------------------------------------------------------|
+| 1     | 96                | 77                  | Basic CNN model                                       |
+| 2     | 99.8              | 84                  | Increased number of layers                            |
+| 3     | 99.8              | 81.2                | Integrated reduced LR                                 |
+| 4     | 100               | 82.2                | Integrated Early Stopping                             |
+| 5     | 98                | 93.01               | Increased padding and MaxPooling from (2,2) to (3,3)  |
+| 7     | 98                | 93.28               | Increased the number of convolution layers and epochs |  
+
+
+
+
 
