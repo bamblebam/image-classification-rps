@@ -39,7 +39,6 @@ model5 = Sequential()
 
 model5.add(Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'))
 model5.add(Conv2D(128, (3, 3), padding='same'))
-model5.add(BatchNormalization())
 model5.add(MaxPooling2D(pool_size=(3, 3)))
 model5.add(Dropout(0.25))
 
