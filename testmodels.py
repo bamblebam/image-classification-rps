@@ -16,6 +16,7 @@ gen_test = test_gen.flow_from_directory(
     "datasets/rps-test-set", class_mode='sparse', batch_size=64, color_mode='grayscale', target_size=(64, 64))
 
 # %%
+#type 2 with invalid layers
 model = Sequential()
 
 model.add(Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'))
@@ -32,6 +33,17 @@ model.compile(optimizer='adam',
 
 # %%
 model.summary()
+
+#type 2 with valid layers
+model5 = Sequential()
+
+model5.add(Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'))
+model5.add(Conv2D(128, (3, 3), padding='same'))
+model5.add(BatchNormalization())
+model5.add(MaxPooling2D(pool_size=(3, 3)))
+model5.add(Dropout(0.25))
+
+model5.add(Dense(3, activation='softmax'))
 
 #for type 1 with keras.layers.[...] syntax
 model2=Sequential([
@@ -54,6 +66,19 @@ model3=Sequential([
   Dense(3, activation='softmax'),
   Dense(3, activation='softmax')
 ])
+
+#for type 1 with invalid layers
+model4=Sequential([
+  keras.layers.Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'),
+  keras.layers.Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'),
+  keras.layers.Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'),
+  keras.layers.Conv2D(128, (3, 3), input_shape=(64, 64, 1), padding='same'),
+  keras.layers.Activation('relu')
+  keras.layers.Dense(3, activation='softmax'),
+  keras.layers.Dense(3, activation='softmax'),
+  keras.layers.Dense(3, activation='softmax')
+])
+
 # %%
 reduceLR = ReduceLROnPlateau(
     monitor='val_loss', factor=0.1, patience=2, verbose=0, mode='auto',
